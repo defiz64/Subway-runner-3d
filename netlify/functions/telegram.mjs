@@ -4,11 +4,11 @@ export const handler = async (event) => {
   const gameUrl = process.env.WEBAPP_URL;
 
   if (!token || !gameUrl) {
-    return {
-      statusCode: 500,
-      body: "Missing bot settings"
-    };
-  }
+  return {
+    statusCode: 500,
+    body: `Missing: ${!token ? "BOT_TOKEN " : ""}${!gameUrl ? "WEBAPP_URL" : ""}`
+  };
+}
 
   if (event.httpMethod !== "POST") {
     return { statusCode: 200, body: "Bot is running!" };
