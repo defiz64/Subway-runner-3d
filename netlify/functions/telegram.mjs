@@ -9,10 +9,26 @@ export const handler = async (event) => {
     body: `Missing: ${!token ? "BOT_TOKEN " : ""}${!gameUrl ? "WEBAPP_URL" : ""}`
   };
 }
+if (event.httpMethod === "GET") {
+  const webhookUrl = "https://luminous-faloodeh-2972e2.netlify.app/.netlify/functions/telegram";
 
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 200, body: "Bot is running!" };
-  }
+  const response = await fetch(
+    `https://api.telegram.org/bot${token}/setWebhook?url=${encodeURIComponent(webhookUrl)}`
+  );
+
+  const result = await response.json();
+
+  return {
+    statusCode: response.ok ? 200 : 500,
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(result)
+  };
+}
+
+if (event.httpMethod !== "POST") {
+  return { statusCode: 405, body: "Method Not Allowed" };
+}
+ 
 
   const update = JSON.parse(event.body || "{}");
   const message = update.message;
